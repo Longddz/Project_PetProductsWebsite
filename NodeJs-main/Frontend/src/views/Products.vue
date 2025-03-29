@@ -31,9 +31,7 @@
             <h3>{{ product.productName }}</h3>
             <p class="price">{{ formatPrice(product.productPrice) }}đ</p>
             <p class="description">{{ truncateDescription(product.productDescription) }}</p>
-            <p class="stock" :class="{ 'low-stock': product.productQuantity < 10 }">
-              {{ getStockStatus(product.productQuantity) }}
-            </p>
+            <p class="stock">Còn lại: {{ product.productQuantity }} sản phẩm</p>
           </div>
         </router-link>
         <div class="product-actions">

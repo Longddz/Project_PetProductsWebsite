@@ -1,4 +1,3 @@
-
 <template>
   <div class="register-container">
     <h2>Đăng ký</h2>
@@ -37,7 +36,6 @@
   </div>
 </template>
 
-
 <script>
 import axios from "axios";
 
@@ -69,14 +67,16 @@ export default {
 
         const response = await axios.post("http://localhost:5000/api/auth/register", payload);
 
-        if (response.data.msg.includes("Thêm tài khoản thành công")) {
+        if (response.status === 200) {
           alert("Đăng ký thành công!");
           this.$router.push("/login");
-        } else {
-          this.errorMessage = response.data.message || "Đăng ký thất bại";
         }
       } catch (error) {
-        this.errorMessage = error.response?.data?.message || "Lỗi khi đăng ký";
+        if (error.response) {
+          this.errorMessage = error.response.data.msg || error.response.data.message || "Lỗi khi đăng ký";
+        } else {
+          this.errorMessage = "Lỗi kết nối đến server";
+        }
       }
     },
   },
@@ -143,4 +143,3 @@ button:hover {
   text-align: center;
 }
 </style>
-

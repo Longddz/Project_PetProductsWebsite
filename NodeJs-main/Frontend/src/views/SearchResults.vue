@@ -51,7 +51,7 @@ export default {
   name: 'SearchResults',
   data() {
     return {
-      searchQuery: '',
+      localSearchQuery: '',
       products: [],
       loading: true,
       error: null

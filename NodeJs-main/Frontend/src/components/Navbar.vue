@@ -16,7 +16,7 @@
       <input 
         type="text" 
         placeholder="Tìm kiếm sản phẩm..." 
-        v-model="searchQuery" 
+        v-model="localSearchQuery" 
         @keyup.enter="search"
         @input="handleSearchInput"
         @focus="showSuggestions = true"
@@ -88,7 +88,7 @@ export default {
   name: 'Navbar',
   data() {
     return {
-      searchQuery: "",
+      localSearchQuery: "",
       showSuggestions: false,
       suggestions: [],
       loading: false,
@@ -596,7 +596,7 @@ button:hover {
   position: absolute;
   top: 100%;
   right: 0;
-  background: white;
+  background-color: rgb(127, 149, 250);
   border-radius: 8px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   min-width: 200px;
@@ -625,6 +625,7 @@ button:hover {
   text-decoration: none;
   font-size: 14px;
   transition: all 0.2s ease;
+  color: #1a237e;
 }
 
 .dropdown-item:hover {
@@ -634,7 +635,7 @@ button:hover {
 
 .dropdown-item i {
   width: 16px;
-  color: #666;
+  color: #1a237e;
 }
 
 .dropdown-item:hover i {

@@ -19,6 +19,15 @@
             class="form-control"
           />
         </div>
+        <div class="form-group">
+          <label>Tên đăng nhập</label>
+          <input 
+            v-model="userData.userName" 
+            :disabled="true"
+            type="text"
+            class="form-control"
+          />
+        </div>
       </div>
 
       <div class="profile-section">
@@ -26,45 +35,22 @@
         <div class="form-group">
           <label>Họ và tên</label>
           <input 
-            v-model="userData.fullName" 
+            v-model="userData.customerName" 
             :disabled="!isEditing"
             type="text"
             class="form-control"
             placeholder="Nhập họ và tên"
-            required
           />
         </div>
         <div class="form-group">
           <label>Số điện thoại</label>
           <input 
-            v-model="userData.phone" 
+            v-model="userData.phoneNumber" 
             :disabled="!isEditing"
             type="tel"
             class="form-control"
             placeholder="Nhập số điện thoại"
           />
-        </div>
-        <div class="form-group">
-          <label>Ngày sinh</label>
-          <input 
-            v-model="userData.dateOfBirth" 
-            :disabled="!isEditing"
-            type="date"
-            class="form-control"
-          />
-        </div>
-        <div class="form-group">
-          <label>Giới tính</label>
-          <select 
-            v-model="userData.gender" 
-            :disabled="!isEditing"
-            class="form-control"
-          >
-            <option value="">Chọn giới tính</option>
-            <option value="male">Nam</option>
-            <option value="female">Nữ</option>
-            <option value="other">Khác</option>
-          </select>
         </div>
       </div>
 
@@ -73,41 +59,11 @@
         <div class="form-group">
           <label>Địa chỉ</label>
           <input 
-            v-model="userData.address" 
+            v-model="userData.customerAddress" 
             :disabled="!isEditing"
             type="text"
             class="form-control"
             placeholder="Nhập địa chỉ"
-          />
-        </div>
-        <div class="form-group">
-          <label>Thành phố</label>
-          <input 
-            v-model="userData.city" 
-            :disabled="!isEditing"
-            type="text"
-            class="form-control"
-            placeholder="Nhập thành phố"
-          />
-        </div>
-        <div class="form-group">
-          <label>Quận/Huyện</label>
-          <input 
-            v-model="userData.district" 
-            :disabled="!isEditing"
-            type="text"
-            class="form-control"
-            placeholder="Nhập quận/huyện"
-          />
-        </div>
-        <div class="form-group">
-          <label>Mã bưu điện</label>
-          <input 
-            v-model="userData.postalCode" 
-            :disabled="!isEditing"
-            type="text"
-            class="form-control"
-            placeholder="Nhập mã bưu điện"
           />
         </div>
       </div>
@@ -156,7 +112,6 @@
       </div>
     </div>
     
-    <!-- Modal xác nhận hủy -->
     <div v-if="showConfirmCancel" class="modal-overlay">
       <div class="modal-content">
         <h3>Xác nhận hủy</h3>
@@ -184,15 +139,10 @@ export default {
       showConfirmCancel: false,
       userData: {
         email: '',
-        username: '',
-        fullName: '',
-        phone: '',
-        dateOfBirth: '',
-        gender: '',
-        address: '',
-        city: '',
-        district: '',
-        postalCode: ''
+        userName: '',
+        customerName: '',
+        phoneNumber: '',
+        customerAddress: ''
       },
       passwordData: {
         currentPassword: '',
@@ -209,16 +159,10 @@ export default {
     },
     hasChanges() {
       if (!this.originalData) return false;
-      
       return (
-        this.userData.fullName !== this.originalData.fullName ||
-        this.userData.phone !== this.originalData.phone ||
-        this.userData.dateOfBirth !== this.originalData.dateOfBirth ||
-        this.userData.gender !== this.originalData.gender ||
-        this.userData.address !== this.originalData.address ||
-        this.userData.city !== this.originalData.city ||
-        this.userData.district !== this.originalData.district ||
-        this.userData.postalCode !== this.originalData.postalCode
+        this.userData.customerName !== this.originalData.customerName ||
+        this.userData.phoneNumber !== this.originalData.phoneNumber ||
+        this.userData.customerAddress !== this.originalData.customerAddress
       );
     }
   },
@@ -231,16 +175,15 @@ export default {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
         });
-        
-        // Lấy email từ localStorage thay vì store
         const user = JSON.parse(localStorage.getItem('user'));
         this.userData = {
-          ...response.data,
-          email: user?.email || ''
+          email: user?.email || '',
+          userName: response.data.userName || '',
+          customerName: response.data.customerName || '',
+          phoneNumber: response.data.phoneNumber || '',
+          customerAddress: response.data.customerAddress || ''
         };
-        
-        // Lưu bản sao của dữ liệu ban đầu
-        this.originalData = {...this.userData};
+        this.originalData = { ...this.userData };
       } catch (error) {
         console.error('Error fetching user data:', error);
         this.$toast?.error('Không thể tải thông tin người dùng');
@@ -248,11 +191,9 @@ export default {
     },
     startEditing() {
       this.isEditing = true;
-      // Lưu bản sao của dữ liệu ban đầu khi bắt đầu chỉnh sửa
-      this.originalData = {...this.userData};
+      this.originalData = { ...this.userData };
     },
     cancelEditing() {
-      // Nếu có thay đổi, hiển thị xác nhận
       if (this.hasChanges) {
         this.showConfirmCancel = true;
       } else {
@@ -260,29 +201,25 @@ export default {
       }
     },
     confirmCancel() {
-      // Khôi phục dữ liệu ban đầu
-      this.userData = {...this.originalData};
+      this.userData = { ...this.originalData };
       this.isEditing = false;
       this.showConfirmCancel = false;
     },
     async saveChanges() {
-      // Bỏ kiểm tra dữ liệu bắt buộc
       this.isSaving = true;
       try {
         this.$toast?.info('Đang lưu thông tin...');
-        
-        await axios.put('http://localhost:5000/api/user/profile', this.userData, {
+        await axios.put('http://localhost:5000/api/user/profile', {
+          customerName: this.userData.customerName,
+          phoneNumber: this.userData.phoneNumber,
+          customerAddress: this.userData.customerAddress
+        }, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
         });
-        
-        // Cập nhật thông tin trong store
         this.updateUserInfo(this.userData);
-        
-        // Cập nhật dữ liệu gốc sau khi lưu thành công
-        this.originalData = {...this.userData};
-        
+        this.originalData = { ...this.userData };
         this.isEditing = false;
         this.$toast?.success('Cập nhật thông tin thành công');
       } catch (error) {
@@ -298,26 +235,21 @@ export default {
         this.$toast?.error('Vui lòng nhập mật khẩu hiện tại');
         return;
       }
-      
       if (!this.passwordData.newPassword) {
         this.$toast?.error('Vui lòng nhập mật khẩu mới');
         return;
       }
-      
       if (this.passwordData.newPassword !== this.passwordData.confirmPassword) {
         this.$toast?.error('Mật khẩu mới không khớp');
         return;
       }
-
       try {
         this.$toast?.info('Đang cập nhật mật khẩu...');
-        
         await axios.put('http://localhost:5000/api/user/change-password', this.passwordData, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
         });
-        
         this.$toast?.success('Đổi mật khẩu thành công');
         this.passwordData = {
           currentPassword: '',
@@ -332,7 +264,6 @@ export default {
     }
   },
   created() {
-    // Khởi tạo email từ localStorage ngay khi component được tạo
     const user = JSON.parse(localStorage.getItem('user'));
     this.userData.email = user?.email || '';
     this.fetchUserData();
@@ -466,7 +397,6 @@ export default {
   transform: translateY(-1px);
 }
 
-/* Modal styles */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -536,18 +466,4 @@ export default {
     flex-direction: column;
   }
 }
-
-select.form-control {
-  appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  background-size: 16px;
-  padding-right: 40px;
-}
-
-select.form-control:disabled {
-  background-color: #f5f5f5;
-  cursor: not-allowed;
-}
-</style> 
+</style>

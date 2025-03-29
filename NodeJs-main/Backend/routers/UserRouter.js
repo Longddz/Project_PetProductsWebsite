@@ -10,6 +10,6 @@ const {
 
 userRouter.route("/").get(verifyToken, getAllUser);
 
-userRouter.route("/:id").get(verifyToken, getUserById).put(verifyToken, updateUser);
+userRouter.route("/profile").get(verifyToken, getUserById).put(verifyToken, updateUser);
 
 module.exports = userRouter;

@@ -6,8 +6,9 @@ import ProductDetail from "@/views/ProductDetail.vue";
 import ProductManagement from '@/views/ProductManagement.vue';
 import Products from '@/views/Products.vue'
 import Cart from '@/views/Cart.vue';
-import Profile from '../views/Profile.vue'
-import Orders from '../views/Orders.vue'
+import Profile from '@/views/Profile.vue'
+import Orders from '@/views/Orders.vue'
+import SearchResults from '@/views/SearchResults.vue'
 
 const routes = [
   { path: "/", component: Home },
@@ -29,6 +30,11 @@ const routes = [
     path: '/cart',
     name: 'Cart',
     component: Cart
+  },
+  {
+    path: '/search',
+    name: 'SearchResults',
+    component: SearchResults
   },
   {
     path: '/new-arrivals',

@@ -21,7 +21,7 @@ const getAllUser = asyncHandler(async (req, res) => {
 
 // Get user by ID
 const getUserById = asyncHandler(async (req, res) => {
-    const { id } = req.userToken.id;
+    const id = req.userToken.id;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
         res.status(400);
@@ -40,7 +40,7 @@ const getUserById = asyncHandler(async (req, res) => {
 
 // Update user
 const updateUser = asyncHandler(async (req, res) => {
-    const { id } = req.userToken.id;
+    const id = req.userToken.id;
     const { customerName, phoneNumber, customerAddress } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -73,7 +73,7 @@ const updateUser = asyncHandler(async (req, res) => {
 
 // Get customer address && phone number
 const getCustomerInformation = asyncHandler(async (req, res) => {
-    const { id } = req.userToken.id;
+    const id = req.userToken.id;
      
     if (!mongoose.Types.ObjectId.isValid(id)) {
         res.status(400);
